@@ -11,11 +11,13 @@ const loadSearchResult = () => {
 };
 
 const displayResults = data => {
+    toggleSpinner('block');
     const displaySection = document.getElementById('phone-display-section');
     displaySection.textContent = '';
     if (data.length == 0) {
         document.getElementById('no-result').style.display = 'block';
         document.getElementById('details-showcase').style.display = 'none';
+        toggleSpinner('none');
     } else {
         document.getElementById('no-result').style.display = 'none';
         document.getElementById('details-showcase').style.display = 'block';
@@ -34,7 +36,10 @@ const displayResults = data => {
         `;
             displaySection.appendChild(div);
         });
+
+        toggleSpinner('none');
     }
+
 };
 
 
@@ -97,3 +102,10 @@ const releaseDateCheck = release => {
         return release;
     }
 };
+
+
+// Spinner ad
+
+const toggleSpinner = displayStyle => {
+    document.getElementById('spinner').style.display = displayStyle;
+}
