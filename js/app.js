@@ -104,8 +104,8 @@ const releaseDateCheck = release => {
 };
 
 
-// Spinner ad
+// Spinner add :)
 
 const toggleSpinner = displayStyle => {
     document.getElementById('spinner').style.display = displayStyle;
-}
+};
