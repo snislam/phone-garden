@@ -1,7 +1,8 @@
 // Search result display function (Arrow function);
 const loadSearchResult = () => {
     const inputField = document.getElementById('input-field');
-    const searchText = inputField.value;
+    const searchValue = inputField.value;
+    const searchText = searchValue.toLowerCase();
     inputField.value = '';
     const url = `https://openapi.programming-hero.com/api/phones?search=${searchText}`;
     fetch(url)
@@ -11,10 +12,18 @@ const loadSearchResult = () => {
 
 const displayResults = data => {
     const displaySection = document.getElementById('phone-display-section');
-    data.forEach(phone => {
-        const div = document.createElement('div');
-        div.classList.add('col');
-        div.innerHTML = `
+    displaySection.textContent = '';
+    if (data.length == 0) {
+        document.getElementById('no-result').style.display = 'block';
+        document.getElementById('details-showcase').style.display = 'none';
+    } else {
+        document.getElementById('no-result').style.display = 'none';
+        document.getElementById('details-showcase').style.display = 'block';
+        document.getElementById('details-showcase').textContent = '';
+        data.forEach(phone => {
+            const div = document.createElement('div');
+            div.classList.add('col');
+            div.innerHTML = `
             <div class="card shadow">
                 <img src="${phone.image}" class="card-img-top img-fluid p-4" alt="...">
                 <div class="card-body p-4">
@@ -22,9 +31,10 @@ const displayResults = data => {
                     <h5 class="card-title mb-3">${phone.phone_name}</h5>
                     <button onclick="showPhoneDetails('${phone.slug}')" class="btn btn-primary" > Details</button >
             </div >
-    `;
-        displaySection.appendChild(div);
-    });
+        `;
+            displaySection.appendChild(div);
+        });
+    }
 };
 
 
@@ -34,14 +44,10 @@ const showPhoneDetails = (id) => {
     fetch(url)
         .then(res => res.json())
         .then(data => displayDetails(data.data));
-    console.log(url);
 };
 
 const displayDetails = phone => {
     const detailsShowcase = document.getElementById('details-showcase');
-    console.log(typeof phone.releaseDate);
-    console.log()
-    console.log(phone.releaseDate);
     detailsShowcase.innerHTML = `
         <div class="card mb-3 w-75 mx-auto my-4 p-4">
           <div class="row g-0">
@@ -68,7 +74,7 @@ const displayDetails = phone => {
                 <p class="card-text"><b>Radio:</b> ${checkValue(phone.others?.Radio)}</p>
                 <p class="card-text"><b>USB:</b> ${checkValue(phone.others?.USB)}</p>
                 <p class="card-text"><b>WLAN:</b> ${checkValue(phone.others?.WLAN)}</p>
-                <p class="card-text"><b>Release Date:</b> ${checkValue(phone.releaseDate)}</p>
+                <p class="card-text"><b>Release Date:</b> ${releaseDateCheck(phone.releaseDate)}</p>
               </div >
             </div >
           </div >
@@ -79,9 +85,15 @@ const displayDetails = phone => {
 const checkValue = value => {
     if (value != undefined) {
         return value;
-    } else if (value = "") {
-        return 'Unknown';
     } else {
         return 'Opps! Unknown';
+    }
+};
+
+const releaseDateCheck = release => {
+    if (release.length === 0) {
+        return 'Unknown';
+    } else {
+        return release;
     }
 };
